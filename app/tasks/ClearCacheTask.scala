@@ -8,7 +8,7 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationInt
 
 class ClearCacheTask @Inject()(cache: Cache, actorSystem: ActorSystem)(implicit executionContext: ExecutionContext) {
-  actorSystem.scheduler.scheduleAtFixedRate(initialDelay = 0.seconds, interval = 20.seconds) { () =>
+  actorSystem.scheduler.scheduleAtFixedRate(initialDelay = 0.seconds, interval = 1.minutes) { () =>
     cache.clearCache
     actorSystem.log.info("Cache cleared")
   }

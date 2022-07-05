@@ -2,7 +2,6 @@ package controllers
 
 import play.api.mvc.{AbstractController, ControllerComponents}
 import services.{AreaCalculateService, Cache}
-import tasks.ClearCacheTask
 
 import javax.inject._
 
@@ -23,7 +22,8 @@ class HomeController @Inject()(cache: Cache, cc: ControllerComponents) extends A
    */
   def calculate(a: Int, b: Int) = Action {
     val res = areaCalculateService.calculate(a, b)
-    cache.addInCache(a.toString + "*" + b.toString + "=" + res.toString)
+
+    cache.addInCache(a.toString + "*" + b.toString + "=" + res.toString+"\r\n")
     Ok(views.html.calculate(res, a, b, cache.cache))
   }
 
