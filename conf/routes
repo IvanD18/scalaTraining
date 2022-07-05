@@ -1,0 +1,4 @@
+GET        /calculate/:a/:b        controllers.HomeController.calculate(a:Int, b:Int)
+
+
+      
