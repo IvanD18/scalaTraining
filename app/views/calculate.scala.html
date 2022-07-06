@@ -3,19 +3,20 @@
 * message to display.
 *@
 @import java.util
-@(answer: String, a: Int, b: Int, cache: util.ArrayList[String])
+@(answer: String, key: String, cache: util.TreeMap[String, String])
 
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <h1>
             Square:
-            @a * @b = @answer
-        </h1>
+            @key@answer
+            </h1>
         <div>
             Query cache:
             <ul>
-            @for(с <- cache) {
+
+            @for(с <- cache.entrySet()) {
                 <li>@с</li>
             }
             </ul>

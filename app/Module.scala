@@ -17,9 +17,6 @@ import tasks.ClearCacheTask
 class Module extends AbstractModule {
 
   override def configure() = {
-
-    bind(classOf[Clock]).toInstance(Clock.systemDefaultZone)
-
     bind(classOf[ClearCacheTask]).asEagerSingleton()
     bind(classOf[Cache]).asEagerSingleton()
 

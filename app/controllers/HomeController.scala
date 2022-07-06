@@ -22,14 +22,16 @@ class HomeController @Inject()(cache: Cache, cc: ControllerComponents) extends A
    * a path of `/`.
    */
   def calculate(a: Int, b: Int) = Action {
-    var res = ""
-
-      res = areaCalculateService.calculate(a, b)
-
-  //    case e: WrongInputParameters => res = e.getMessage
-
-    cache.addInCache(a.toString + "*" + b.toString + "=" + res + "\r\n")
-    Ok(views.html.calculate(res, a, b, cache.cache))
+    cache.synchronized {
+      var res = ""
+      val key = a.toString + "*" + b.toString + "="
+      if (cache.cache.containsKey(key)) res = cache.findInCache(key)
+      else {
+        res = areaCalculateService.calculate(a, b)
+      }
+      cache.addInCache(key, res)
+      Ok(views.html.calculate(res, key, cache.cache))
+    }
   }
 
 }

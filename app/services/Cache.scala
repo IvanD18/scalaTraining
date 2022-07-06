@@ -1,14 +1,18 @@
 package services
 
-import java.util.ArrayList
+import java.util
 import javax.inject.Singleton
 
 @Singleton
 class Cache {
-  val cache = new ArrayList[String]
+  val cache = new util.TreeMap[String, String]
 
-  def addInCache(expression: String): Unit = {
-    cache.add(expression)
+  def addInCache(key: String, value: String): Unit = {
+    cache.put(key, value)
+  }
+
+  def findInCache(key: String): String = {
+    cache.get(key)
   }
 
   def clearCache = {
