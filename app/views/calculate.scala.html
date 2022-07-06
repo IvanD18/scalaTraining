@@ -3,17 +3,17 @@
 * message to display.
 *@
 @import java.util
-@(answer: Int, a: Int, b: Int, cache: util.ArrayList[String])
+@(answer: String, a: Int, b: Int, cache: util.ArrayList[String])
 
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <h1>
-            Square: 
+            Square:
             @a * @b = @answer
         </h1>
         <div>
-        Query cache:
+            Query cache:
             <ul>
             @for(с <- cache) {
                 <li>@с</li>

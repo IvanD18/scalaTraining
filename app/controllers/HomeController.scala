@@ -1,5 +1,6 @@
 package controllers
 
+import exceptions.WrongInputParameters
 import play.api.mvc.{AbstractController, ControllerComponents}
 import services.{AreaCalculateService, Cache}
 
@@ -21,9 +22,13 @@ class HomeController @Inject()(cache: Cache, cc: ControllerComponents) extends A
    * a path of `/`.
    */
   def calculate(a: Int, b: Int) = Action {
-    val res = areaCalculateService.calculate(a, b)
+    var res = ""
 
-    cache.addInCache(a.toString + "*" + b.toString + "=" + res.toString+"\r\n")
+      res = areaCalculateService.calculate(a, b)
+
+  //    case e: WrongInputParameters => res = e.getMessage
+
+    cache.addInCache(a.toString + "*" + b.toString + "=" + res + "\r\n")
     Ok(views.html.calculate(res, a, b, cache.cache))
   }
 
