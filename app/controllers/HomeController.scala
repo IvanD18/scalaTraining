@@ -1,17 +1,19 @@
 package controllers
 
-import exceptions.WrongInputParameters
+import play.api.cache.AsyncCacheApi
 import play.api.mvc.{AbstractController, ControllerComponents}
-import services.{AreaCalculateService, Cache}
+import services.AreaCalculateService
 
 import javax.inject._
+import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.duration.DurationInt
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
  * application's home page.
  */
 @Singleton
-class HomeController @Inject()(cache: Cache, cc: ControllerComponents) extends AbstractController(cc) {
+class HomeController @Inject()(cache: AsyncCacheApi, cc: ControllerComponents)(implicit executionContext: ExecutionContext) extends AbstractController(cc) {
 
   val areaCalculateService = new AreaCalculateService
 
@@ -22,16 +24,11 @@ class HomeController @Inject()(cache: Cache, cc: ControllerComponents) extends A
    * a path of `/`.
    */
   def calculate(a: Int, b: Int) = Action {
-    cache.synchronized {
-      var res = ""
-      val key = a.toString + "*" + b.toString + "="
-      if (cache.cache.containsKey(key)) res = cache.findInCache(key)
-      else {
-        res = areaCalculateService.calculate(a, b)
-      }
-      cache.addInCache(key, res)
-      Ok(views.html.calculate(res, key, cache.cache))
-    }
-  }
 
+    val key = a.toString + "*" + b.toString + "="
+    val futureRes: String = Await.result(cache.getOrElseUpdate(key, 1.minutes) {
+      Future(areaCalculateService.calculate(a, b))
+    }, 5.seconds)
+    Ok(views.html.calculate(futureRes, key))
+  }
 }

@@ -1,9 +1,5 @@
 import com.google.inject.AbstractModule
 
-import java.time.Clock
-import services.Cache
-import tasks.ClearCacheTask
-
 /**
  * This class is a Guice module that tells Guice how to bind several
  * different types. This Guice module is created when the Play
@@ -17,8 +13,6 @@ import tasks.ClearCacheTask
 class Module extends AbstractModule {
 
   override def configure() = {
-    bind(classOf[ClearCacheTask]).asEagerSingleton()
-    bind(classOf[Cache]).asEagerSingleton()
 
   }
 

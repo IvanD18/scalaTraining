@@ -3,24 +3,15 @@
 * message to display.
 *@
 @import java.util
-@(answer: String, key: String, cache: util.TreeMap[String, String])
+@import play.api.cache.AsyncCacheApi
+@(answer: String, key: String)
 
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <h1>
             Square:
-            @key@answer
+            @key @answer
             </h1>
-        <div>
-            Query cache:
-            <ul>
-
-            @for(с <- cache.entrySet()) {
-                <li>@с</li>
-            }
-            </ul>
-        </div>
-
     </head>
 </html>
