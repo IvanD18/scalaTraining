@@ -34,10 +34,5 @@ class HomeController @Inject()(cache: AsyncCacheApi,
       }
     } yield Ok(views.html.calculate(res, key))
 
-
-    //    val futureRes = cache.getOrElseUpdate(key, 1.minutes) {
-    //      Future(areaCalculateService.calculate(a, b))
-    //    }
-    //    futureRes.map(res => Ok(views.html.calculate(res, key)))
   }
 }
