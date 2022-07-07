@@ -1,7 +1,7 @@
 package controllers
 
 import play.api.cache.AsyncCacheApi
-import play.api.mvc.{AbstractController, ControllerComponents}
+import play.api.mvc.{Action, AnyContent, BaseController, ControllerComponents}
 import services.AreaCalculateService
 
 import javax.inject._
@@ -13,7 +13,10 @@ import scala.concurrent.duration.DurationInt
  * application's home page.
  */
 @Singleton
-class HomeController @Inject()(cache: AsyncCacheApi, cc: ControllerComponents)(implicit executionContext: ExecutionContext) extends AbstractController(cc) {
+class HomeController @Inject()(cache: AsyncCacheApi,
+                               override val controllerComponents: ControllerComponents)
+                              (implicit executionContext: ExecutionContext)
+  extends BaseController {
 
   val areaCalculateService = new AreaCalculateService
 
@@ -23,12 +26,12 @@ class HomeController @Inject()(cache: AsyncCacheApi, cc: ControllerComponents)(i
    * will be called when the application receives a `GET` request with
    * a path of `/`.
    */
-  def calculate(a: Int, b: Int) = Action {
-
+  def calculate(a: Int, b: Int): Action[AnyContent] = Action.async {
     val key = a.toString + "*" + b.toString + "="
-    val futureRes: String = Await.result(cache.getOrElseUpdate(key, 1.minutes) {
+
+    val futureRes = cache.getOrElseUpdate(key, 1.minutes) {
       Future(areaCalculateService.calculate(a, b))
-    }, 5.seconds)
-    Ok(views.html.calculate(futureRes, key))
+    }
+    futureRes.map(res => Ok(views.html.calculate(res, key)))
   }
 }

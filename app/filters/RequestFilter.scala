@@ -1,7 +1,6 @@
 package filters
 
 import exceptions.WrongInputParameters
-import play.api.mvc.Results.BadRequest
 import play.api.mvc.{EssentialAction, EssentialFilter, RequestHeader}
 
 import javax.inject.Inject
