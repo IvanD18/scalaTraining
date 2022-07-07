@@ -28,10 +28,16 @@ class HomeController @Inject()(cache: AsyncCacheApi,
    */
   def calculate(a: Int, b: Int): Action[AnyContent] = Action.async {
     val key = a.toString + "*" + b.toString + "="
+    for {
+      res <- cache.getOrElseUpdate(key, 1.minutes) {
+        Future(areaCalculateService.calculate(a, b))
+      }
+    } yield Ok(views.html.calculate(res, key))
 
-    val futureRes = cache.getOrElseUpdate(key, 1.minutes) {
-      Future(areaCalculateService.calculate(a, b))
-    }
-    futureRes.map(res => Ok(views.html.calculate(res, key)))
+
+    //    val futureRes = cache.getOrElseUpdate(key, 1.minutes) {
+    //      Future(areaCalculateService.calculate(a, b))
+    //    }
+    //    futureRes.map(res => Ok(views.html.calculate(res, key)))
   }
 }
